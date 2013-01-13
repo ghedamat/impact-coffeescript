@@ -24,8 +24,11 @@ class Impactrb < Sinatra::Base
 
   get '/lib/weltmeister/api/glob' do
     @files = params[:glob].inject([]) do |memo, glob|
+      glob.sub!(/js$/,'coffee')
       dir = from_impact_basedir(glob)
       Pathname.glob(dir).each do |d| 
+        p = d.to_s.sub(/coffee$/,'js')
+        d = Pathname.new(p)
         memo << relative_pathname(d)
       end
       memo
@@ -94,5 +97,13 @@ class Impactrb < Sinatra::Base
       @asset_root ||= Pathname(File.dirname(__FILE__)).realpath
       path.expand_path.relative_path_from(@asset_root).cleanpath.to_s
     end
+  end
+
+
+  get '/lib/game/entities/:file' do
+    content_type 'text/javascript'
+    path = "lib/game/entities/#{params['file']}"
+    path = from_impact_basedir(path)
+    CoffeeScript.compile File.read(path.sub(/js$/,'coffee'))
   end
 end

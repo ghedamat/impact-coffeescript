@@ -15,6 +15,6 @@ Instructions
 * `bundle install`
 * copy your impact `lib/` directory into `source/`
 * copy your impact `weltmeister.html` into `source/`
-* `middleman server`
+* `bundle exec middleman server`
 
 
